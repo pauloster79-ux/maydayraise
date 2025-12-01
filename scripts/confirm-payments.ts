@@ -46,7 +46,7 @@ async function confirmPendingPayments() {
     for (const app of pendingApplications) {
         try {
             // Create a confirmed payment for this application
-            const payment = await prisma.payment.create({
+            await prisma.payment.create({
                 data: {
                     applicationId: app.id,
                     amount: app.amount,

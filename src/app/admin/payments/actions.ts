@@ -109,7 +109,7 @@ export async function processBankStatement(formData: FormData): Promise<Reconcil
   let rows: StatementRow[];
   try {
     rows = readCsv(text);
-  } catch (error) {
+  } catch {
     summary.errors.push('Unable to parse CSV file. Please ensure it has headers Date, Amount, Reference.');
     return summary;
   }
