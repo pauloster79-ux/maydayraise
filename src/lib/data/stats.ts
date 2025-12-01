@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 // import { PaymentStatus } from '@prisma/client';
-import { unstable_cache } from 'next/cache';
+// import { unstable_cache } from 'next/cache';
 
 export type FundraisingStats = {
   totalRaised: number;
@@ -21,7 +21,6 @@ export const getFundraisingStats = async (): Promise<FundraisingStats> => {
   let raiseEndDate = new Date('2025-03-28');
 
   try {
-    // @ts-ignore - Settings model might not exist yet
     const settings = await prisma.settings.findFirst();
     if (settings) {
       targetAmount = settings.targetRaiseAmount || targetAmount;
@@ -30,7 +29,7 @@ export const getFundraisingStats = async (): Promise<FundraisingStats> => {
         raiseEndDate = settings.raiseEndDate;
       }
     }
-  } catch (e) {
+  } catch {
     // Ignore error if table doesn't exist yet
   }
 

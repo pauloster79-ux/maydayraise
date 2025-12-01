@@ -64,7 +64,7 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
 
             setMessage({ type: 'success', text: 'Settings updated successfully' });
             router.refresh();
-        } catch (error) {
+        } catch {
             setMessage({ type: 'error', text: 'Something went wrong. Please try again.' });
         } finally {
             setLoading(false);

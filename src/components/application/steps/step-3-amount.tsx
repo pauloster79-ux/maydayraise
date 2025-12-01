@@ -7,12 +7,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { formatCurrency } from '@/lib/utils/reference';
 import { InvestorType } from '@/generated/client/enums';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 
 export function Step3Amount() {
   const { data, updateData, setStep } = useApplicationStore();
   const [amount, setAmount] = useState<string>(data.amount > 0 ? data.amount.toString() : '');
-  
+
   // Limits
   const minAmount = 250;
   const maxAmount = data.investorType === InvestorType.ORGANIZATION ? 100000 : 50000;
@@ -35,7 +35,7 @@ export function Step3Amount() {
 
   const handleContinue = () => {
     if (parsedAmount < minAmount || parsedAmount > maxAmount) return;
-    
+
     updateData({ amount: parsedAmount });
     setStep(4);
   };
@@ -47,10 +47,10 @@ export function Step3Amount() {
           <Label htmlFor="amount" className="text-lg">How much would you like to invest?</Label>
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-semibold text-slate-500">£</span>
-            <Input 
-              id="amount" 
-              type="number" 
-              value={amount} 
+            <Input
+              id="amount"
+              type="number"
+              value={amount}
               onChange={(e) => setAmount(e.target.value)}
               className="pl-10 text-xl py-6"
               placeholder="5000"

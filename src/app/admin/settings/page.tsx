@@ -6,7 +6,6 @@ export const dynamic = 'force-dynamic';
 export default async function SettingsPage() {
     let settings = null;
     try {
-        // @ts-ignore - Settings model doesn't exist in client yet
         settings = await prisma.settings.findFirst();
     } catch (e) {
         console.warn('Could not fetch settings (migration might be pending)', e);
