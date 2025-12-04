@@ -1,6 +1,8 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null;
 
 type EmailPayload = {
   to: string;
@@ -9,7 +11,7 @@ type EmailPayload = {
 };
 
 export const sendEmail = async (payload: EmailPayload) => {
-  if (!process.env.RESEND_API_KEY) {
+  if (!resend) {
     console.log('⚠️ RESEND_API_KEY is missing. Logging email to console instead.');
     console.log(payload);
     return { success: true, id: 'mock-id' };
