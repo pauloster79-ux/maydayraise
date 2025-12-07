@@ -114,18 +114,40 @@ export async function submitApplication(data: z.infer<typeof ApplicationSchema>)
     // For this share offer, we might want to create a new record or link.
     // Let's assume unique email per shareholder for simplicity or create new.
 
-    const shareholder = await prisma.shareholder.create({
-      data: {
-        email,
-        firstName, lastName, phone, dateOfBirth,
-        addressLine1, addressLine2, city, postcode, country,
-        secondaryName: investorType === 'JOINT' ? secondaryName : undefined,
-        organizationName: investorType === 'ORGANIZATION' ? organizationName : undefined,
-        organizationType: investorType === 'ORGANIZATION' ? organizationType : undefined,
-        companyNumber: investorType === 'ORGANIZATION' ? companyNumber : undefined,
-        investorType
-      }
+    // 1. Create or Update Shareholder
+    // Check if shareholder exists by email to avoid unique constraint violations
+    let shareholder = await prisma.shareholder.findFirst({
+      where: { email }
     });
+
+    if (shareholder) {
+      shareholder = await prisma.shareholder.update({
+        where: { id: shareholder.id },
+        data: {
+          firstName, lastName, phone, dateOfBirth,
+          addressLine1, addressLine2, city, postcode, country,
+          // Clear optional fields if not relevant to new investor type
+          secondaryName: investorType === 'JOINT' ? secondaryName : null,
+          organizationName: investorType === 'ORGANIZATION' ? organizationName : null,
+          organizationType: investorType === 'ORGANIZATION' ? organizationType : null,
+          companyNumber: investorType === 'ORGANIZATION' ? companyNumber : null,
+          investorType
+        }
+      });
+    } else {
+      shareholder = await prisma.shareholder.create({
+        data: {
+          email,
+          firstName, lastName, phone, dateOfBirth,
+          addressLine1, addressLine2, city, postcode, country,
+          secondaryName: investorType === 'JOINT' ? secondaryName : undefined,
+          organizationName: investorType === 'ORGANIZATION' ? organizationName : undefined,
+          organizationType: investorType === 'ORGANIZATION' ? organizationType : undefined,
+          companyNumber: investorType === 'ORGANIZATION' ? companyNumber : undefined,
+          investorType
+        }
+      });
+    }
 
     // 2. Create Application
     const reference = generateReferenceCode();
