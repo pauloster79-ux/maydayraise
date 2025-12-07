@@ -224,7 +224,6 @@ export async function saveMessage(data: z.infer<typeof SaveMessageSchema>) {
       }
     });
 
-    revalidateTag('investor-messages-v6');
     revalidatePath('/', 'page');
     return { success: true };
   } catch (error) {
