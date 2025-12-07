@@ -5,7 +5,7 @@ import { WizardLayout } from '../wizard-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { AddressAutocomplete } from '@/components/ui/address-autocomplete';
+
 import { InvestorType } from '@/generated/client/enums';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -78,12 +78,7 @@ export function Step2Details() {
     setStep(3);
   };
 
-  const handleAddressSelect = (address: { line1: string; line2?: string; city: string; postcode: string }) => {
-    setValue('addressLine1', address.line1, { shouldValidate: true });
-    setValue('addressLine2', address.line2 || '', { shouldValidate: true });
-    setValue('city', address.city, { shouldValidate: true });
-    setValue('postcode', address.postcode, { shouldValidate: true });
-  };
+
 
   const ageWarningActive = errors.dateOfBirth?.message === ageRestrictionMessage;
 
@@ -94,10 +89,10 @@ export function Step2Details() {
         {/* Organization Fields */}
         {data.investorType === InvestorType.ORGANIZATION && (
           <div className="space-y-4 border-b pb-6">
-            <h3 className="font-medium text-slate-900">Organization Information</h3>
+            <h3 className="font-medium text-slate-900">Organisation Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="organizationName">Organization Name</Label>
+                <Label htmlFor="organizationName">Organisation Name</Label>
                 <Input id="organizationName" {...register('organizationName')} />
                 {errors.organizationName && <span className="text-red-500 text-sm">{errors.organizationName.message}</span>}
               </div>
@@ -164,11 +159,7 @@ export function Step2Details() {
           <h3 className="font-medium text-slate-900">Address</h3>
 
           {/* Address Autocomplete Component */}
-          <AddressAutocomplete
-            onAddressSelect={handleAddressSelect}
-            defaultPostcode={data.postcode}
-            defaultAddressLine1={data.addressLine1}
-          />
+
 
           {/* Manual Address Fields */}
           <div className="space-y-2">

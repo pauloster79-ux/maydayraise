@@ -52,7 +52,7 @@ export const ShareCertificateDocument: React.FC<CertificateProps> = ({ name, sha
       <View style={styles.header}>
         <Text>Mayday Saxonvale Community Benefit Society</Text>
       </View>
-      
+
       <View style={styles.section}>
         <Text style={styles.title}>SHARE CERTIFICATE</Text>
       </View>
@@ -63,10 +63,13 @@ export const ShareCertificateDocument: React.FC<CertificateProps> = ({ name, sha
         </Text>
         <Text style={{ fontSize: 16, fontWeight: 'bold', marginVertical: 10 }}>{name}</Text>
         <Text style={styles.details}>
-          is the registered holder of {shares} Withdraw table Shares of £1.00 each.
+          is the registered holder of {shares} Withdrawable Shares of £1.00 each.
         </Text>
         <Text style={styles.details}>
           Total Investment: £{amount.toLocaleString('en-GB')}
+        </Text>
+        <Text style={styles.details}>
+          Mayday Saxonvale is a not-for-profit organisation limited by guarantee.
         </Text>
       </View>
 
@@ -85,4 +88,3 @@ export const ShareCertificateDocument: React.FC<CertificateProps> = ({ name, sha
 export async function generateCertificateStream(props: CertificateProps) {
   return await renderToStream(<ShareCertificateDocument {...props} />);
 }
-

@@ -55,4 +55,3 @@ export function ProgressCounter({ current, target, minimum, investorCount, daysR
     </div>
   );
 }
-

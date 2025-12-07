@@ -6,9 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { PaymentInstructions } from '../payment-instructions';
+import { saveMessage } from '@/app/actions/application';
+import { useState } from 'react';
 
 export function Step6Payment() {
     const { data, updateData, reset, paymentReference, paymentApplicationId } = useApplicationStore();
+    const [isSaving, setIsSaving] = useState(false);
 
     if (!paymentReference || !paymentApplicationId) {
         // If no payment details, redirect back to step 1
@@ -77,12 +80,25 @@ export function Step6Payment() {
                 <div className="flex justify-center pt-4">
                     <Button
                         className="bg-emerald-600 hover:bg-emerald-700"
-                        onClick={() => {
+                        disabled={isSaving}
+                        onClick={async () => {
+                            setIsSaving(true);
+                            if (data.message && data.message.trim() && paymentApplicationId) {
+                                try {
+                                    await saveMessage({
+                                        applicationId: paymentApplicationId,
+                                        message: data.message,
+                                        displayNamePreference: data.displayNamePreference || 'FIRST_NAME_ONLY'
+                                    });
+                                } catch (err) {
+                                    console.error('Failed to save message', err);
+                                }
+                            }
                             reset();
                             window.location.href = '/';
                         }}
                     >
-                        Done
+                        {isSaving ? 'Saving...' : 'Done'}
                     </Button>
                 </div>
             </div>

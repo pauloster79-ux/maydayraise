@@ -1,6 +1,5 @@
 import React from 'react';
 import { getInvestorMessages } from '@/lib/data/messages';
-import { ParachuteIcon } from '@/components/ui/parachute-icon';
 
 export async function InvestorWall() {
   const messages = await getInvestorMessages();
@@ -20,11 +19,8 @@ export async function InvestorWall() {
                 &quot;{msg.content}&quot;
               </blockquote>
               <div className="flex items-center justify-between border-t border-slate-100 pt-4">
-                <div className="flex items-center gap-3 ml-4">
-                  <ParachuteIcon className="w-5 h-5 flex-shrink-0" />
-                  <div>
-                    <p className="font-semibold text-slate-900">{msg.author}</p>
-                  </div>
+                <div>
+                  <p className="font-semibold text-slate-900">{msg.author}</p>
                 </div>
                 <span className="text-xs text-slate-400">
                   {new Date(msg.date).toLocaleDateString('en-GB', { month: 'short', day: 'numeric' })}

@@ -152,19 +152,6 @@ export const sendApplicationConfirmationEmail = async ({
             </td>
           </tr>
           
-          <!-- Footer -->
-          <tr>
-            <td style="padding: 32px 40px; background-color: #f8fafc; border-top: 1px solid #e2e8f0; border-radius: 0 0 8px 8px;">
-              <p style="margin: 0 0 12px; font-size: 14px; line-height: 1.6; color: #64748b;">If you have any questions about your investment, please contact us at:</p>
-              <p style="margin: 0; font-size: 14px; color: #10b981; font-weight: 600;">info@maydaysaxonvale.co.uk</p>
-              
-              <p style="margin: 24px 0 0; font-size: 13px; line-height: 1.6; color: #94a3b8;">Thank you for supporting Mayday Saxonvale and helping us build a better future for our community.</p>
-            </td>
-          </tr>
-        </table>
-        
-        <!-- Legal Footer -->
-        <table role="presentation" style="max-width: 600px; margin: 20px auto 0;">
           <tr>
             <td style="padding: 20px; text-align: center;">
               <p style="margin: 0; font-size: 12px; line-height: 1.5; color: #94a3b8;">

@@ -19,7 +19,7 @@ model Shareholder {
   // Personal / Primary Contact Details
   firstName     String @map("first_name")
   lastName      String @map("last_name")
-  email         String @unique
+  email         String
   phone         String?
   dateOfBirth   DateTime? @map("date_of_birth")
   

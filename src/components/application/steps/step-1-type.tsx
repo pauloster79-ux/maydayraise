@@ -18,8 +18,8 @@ export function Step1InvestorType() {
   return (
     <WizardLayout title="Investor Type">
       <div className="space-y-8">
-        <RadioGroup 
-          value={data.investorType ?? ''} 
+        <RadioGroup
+          value={data.investorType ?? ''}
           onValueChange={(val) => updateData({ investorType: val as InvestorType })}
           className="grid gap-4"
         >
@@ -35,7 +35,7 @@ export function Step1InvestorType() {
               </span>
             </Label>
           </div>
-          
+
           <div>
             <RadioGroupItem value={InvestorType.JOINT} id="joint" className="peer sr-only" />
             <Label
@@ -55,7 +55,7 @@ export function Step1InvestorType() {
               htmlFor="organization"
               className="flex flex-col items-start justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
             >
-              <span className="text-lg font-semibold">Organization</span>
+              <span className="text-lg font-semibold">Organisation</span>
               <span className="text-sm text-muted-foreground mt-1">
                 I am investing on behalf of a business, charity, or club.
               </span>

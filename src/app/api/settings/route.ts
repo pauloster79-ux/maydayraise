@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import { z } from 'zod';
@@ -63,6 +64,7 @@ export async function POST(request: Request) {
             });
         }
 
+        revalidatePath('/');
         return NextResponse.json(settings);
     } catch (error) {
         console.error('Error saving settings:', error);

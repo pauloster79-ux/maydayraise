@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { generateReferenceCode } from '@/lib/utils/reference';
 import { sendApplicationConfirmationEmail } from '@/lib/email';
 // import { ApplicationStatus, InvestorType } from '@prisma/client'; // Removed Enums for SQLite
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { headers } from 'next/headers';
 import rateLimit from '@/lib/rate-limit';
 
@@ -114,18 +114,8 @@ export async function submitApplication(data: z.infer<typeof ApplicationSchema>)
     // For this share offer, we might want to create a new record or link.
     // Let's assume unique email per shareholder for simplicity or create new.
 
-    const shareholder = await prisma.shareholder.upsert({
-      where: { email },
-      update: {
-        firstName, lastName, phone, dateOfBirth,
-        addressLine1, addressLine2, city, postcode, country,
-        secondaryName: investorType === 'JOINT' ? secondaryName : undefined,
-        organizationName: investorType === 'ORGANIZATION' ? organizationName : undefined,
-        organizationType: investorType === 'ORGANIZATION' ? organizationType : undefined,
-        companyNumber: investorType === 'ORGANIZATION' ? companyNumber : undefined,
-        investorType
-      },
-      create: {
+    const shareholder = await prisma.shareholder.create({
+      data: {
         email,
         firstName, lastName, phone, dateOfBirth,
         addressLine1, addressLine2, city, postcode, country,
@@ -196,6 +186,50 @@ export async function submitApplication(data: z.infer<typeof ApplicationSchema>)
   } catch (error) {
     console.error('Failed to submit application:', error);
     return { error: 'Database error' };
+  }
+}
+
+const SaveMessageSchema = z.object({
+  applicationId: z.string(),
+  message: z.string().max(500, 'Message cannot exceed 500 characters'),
+  displayNamePreference: z.enum(['FIRST_NAME_ONLY', 'FULL_NAME', 'ANONYMOUS']),
+});
+
+export async function saveMessage(data: z.infer<typeof SaveMessageSchema>) {
+  const validated = SaveMessageSchema.safeParse(data);
+
+  if (!validated.success) {
+    return { error: 'Validation failed' };
+  }
+
+  const { applicationId, message, displayNamePreference } = validated.data;
+
+  try {
+    const application = await prisma.application.findUnique({
+      where: { id: applicationId },
+      select: { shareholderId: true }
+    });
+
+    if (!application) {
+      return { error: 'Application not found' };
+    }
+
+    await prisma.message.create({
+      data: {
+        shareholderId: application.shareholderId,
+        applicationId,
+        content: message,
+        displayPreference: displayNamePreference,
+        isVisible: true,
+      }
+    });
+
+    revalidateTag('investor-messages-v6');
+    revalidatePath('/', 'page');
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to save message:', error);
+    return { error: 'Failed to save message' };
   }
 }
 

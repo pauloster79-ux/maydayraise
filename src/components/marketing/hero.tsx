@@ -33,6 +33,7 @@ export async function Hero() {
               Own a piece of <span className="text-emerald-500">Saxonvale&apos;s</span> future.
             </h1>
             <p className="text-lg text-slate-700 max-w-xl">
+              The not-for-profit organisation dedicated to the community-led development of the Saxonvale site in Frome.
               Join the community buyout to regenerate Frome&apos;s town centre.
               Invest in community shares and help us build a sustainable future for everyone.
             </p>

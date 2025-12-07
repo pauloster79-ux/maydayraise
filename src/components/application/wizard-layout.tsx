@@ -96,4 +96,3 @@ export function WizardLayout({ children, title }: { children: ReactNode; title: 
     </div>
   );
 }
-

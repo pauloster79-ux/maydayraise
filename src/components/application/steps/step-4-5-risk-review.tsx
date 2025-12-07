@@ -21,7 +21,7 @@ const RISKS = [
   "I understand that the Society Board has the final say on membership applications.",
   "I am investing for social reasons, not purely for financial gain.",
   "I understand that this investment is not covered by the Financial Services Compensation Scheme (FSCS).",
-  "I confirm the money I am investing is my own (or my organization's) and not being invested on behalf of a third party for money laundering purposes."
+  "I confirm the money I am investing is my own (or my organisation's) and not being invested on behalf of a third party for money laundering purposes."
 ];
 
 export function Step4Risks() {
