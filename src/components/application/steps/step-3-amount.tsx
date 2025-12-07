@@ -16,7 +16,7 @@ export function Step3Amount() {
   // Limits
   const minAmount = 250;
   const maxAmount = data.investorType === InvestorType.ORGANIZATION ? 100000 : 50000;
-  const interestRate = 0.06; // 6% target
+  const interestRate = 0.05; // 5% target
 
   const parsedAmount = parseFloat(amount) || 0;
   const shares = Math.floor(parsedAmount); // £1 per share
@@ -68,13 +68,8 @@ export function Step3Amount() {
             <span className="text-slate-600">Number of Shares (£1 each)</span>
             <span className="text-2xl font-bold text-slate-900">{shares.toLocaleString()}</span>
           </div>
-          <div className="flex justify-between items-baseline border-t border-emerald-100 pt-4">
-            <span className="text-slate-600">Target Annual Interest (6%)</span>
-            <span className="text-xl font-semibold text-emerald-700">{formatCurrency(annualInterest)}</span>
-          </div>
-          <p className="text-xs text-slate-500 mt-2">
-            * Interest rates are a target, not a guarantee. Investment capital is at risk.
-          </p>
+
+
         </div>
 
         <div className="flex justify-between pt-6">

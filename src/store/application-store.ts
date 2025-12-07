@@ -9,25 +9,25 @@ export type ApplicationData = {
   email: string;
   phone: string;
   dateOfBirth: Date | null;
-  
+
   secondaryName?: string;
-  
+
   organizationName?: string;
   organizationType?: string;
   companyNumber?: string;
-  
+
   addressLine1: string;
   addressLine2: string;
   city: string;
   postcode: string;
   country: string;
-  
+
   amount: number;
-  
+
   risksAccepted: boolean;
   privacyAccepted: boolean;
   marketingAccepted: boolean;
-  
+
   message?: string;
   displayNamePreference: DisplayNamePreference;
   beneficiaryName?: string;
@@ -36,8 +36,11 @@ export type ApplicationData = {
 interface ApplicationStore {
   step: number;
   data: ApplicationData;
+  paymentReference: string | null;
+  paymentApplicationId: string | null;
   setStep: (step: number) => void;
   updateData: (data: Partial<ApplicationData>) => void;
+  setPaymentDetails: (reference: string, applicationId: string) => void;
   reset: () => void;
 }
 
@@ -65,9 +68,12 @@ export const useApplicationStore = create<ApplicationStore>()(
     (set) => ({
       step: 1,
       data: initialData,
+      paymentReference: null,
+      paymentApplicationId: null,
       setStep: (step) => set({ step }),
       updateData: (newData) => set((state) => ({ data: { ...state.data, ...newData } })),
-      reset: () => set({ step: 1, data: initialData }),
+      setPaymentDetails: (reference, applicationId) => set({ paymentReference: reference, paymentApplicationId: applicationId }),
+      reset: () => set({ step: 1, data: initialData, paymentReference: null, paymentApplicationId: null }),
     }),
     {
       name: 'mayday-application-storage',

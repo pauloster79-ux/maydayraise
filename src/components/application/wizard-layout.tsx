@@ -10,7 +10,8 @@ const WIZARD_STEPS = [
   'Your Details',
   'Investment Amount',
   'Risk Acknowledgment',
-  'Review & Pay',
+  'Review Application',
+  'Make Payment',
 ] as const;
 
 const TOTAL_STEPS = WIZARD_STEPS.length;

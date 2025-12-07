@@ -2,16 +2,28 @@ import { NextRequest, NextResponse } from 'next/server';
 import { MockPaymentProvider } from '@/lib/payment/mock';
 import { prisma } from '@/lib/prisma';
 import { PaymentMethod, PaymentStatus } from '@/lib/payment/types';
+import { z } from 'zod';
 
 const paymentProvider = new MockPaymentProvider();
+
+const InitiatePaymentSchema = z.object({
+  applicationId: z.string().min(1, "Application ID is required"),
+});
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { applicationId } = body;
+
+    const validation = InitiatePaymentSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json({ error: 'Invalid request', details: validation.error.flatten() }, { status: 400 });
+    }
+
+    const { applicationId } = validation.data;
 
     const application = await prisma.application.findUnique({
-      where: { id: applicationId },
+      where: { id: applicationId }, // validation.data.applicationId is guaranteed to be string
+
       include: { shareholder: true }
     });
 

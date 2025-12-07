@@ -3,8 +3,16 @@
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { generateReferenceCode } from '@/lib/utils/reference';
+import { sendApplicationConfirmationEmail } from '@/lib/email';
 // import { ApplicationStatus, InvestorType } from '@prisma/client'; // Removed Enums for SQLite
 import { revalidatePath } from 'next/cache';
+import { headers } from 'next/headers';
+import rateLimit from '@/lib/rate-limit';
+
+const limiter = rateLimit({
+  interval: 60 * 1000, // 60 seconds
+  uniqueTokenPerInterval: 500, // Max 500 users per second
+});
 
 // Zod Schemas for Validation
 const PersonalInfoSchema = z.object({
@@ -41,8 +49,8 @@ const ApplicationSchema = PersonalInfoSchema
   .extend({
     investorType: z.string(), // Was Enum
     riskAcknowledgments: z.any(), // Should be strictly typed in a real app
-    message: z.string().optional(),
-    displayNamePreference: z.string().optional(),
+    message: z.string().max(500, 'Message cannot exceed 500 characters').optional(),
+    displayNamePreference: z.enum(['FIRST_NAME_ONLY', 'FULL_NAME', 'ANONYMOUS']).optional(),
   });
 
 export type CreateApplicationState = {
@@ -79,6 +87,13 @@ export async function submitApplication(data: z.infer<typeof ApplicationSchema>)
 
   if (!validatedFields.success) {
     return { error: 'Validation failed', details: validatedFields.error.flatten() };
+  }
+
+  try {
+    const ip = (await headers()).get('x-forwarded-for') ?? '127.0.0.1';
+    await limiter.check(5, ip); // 5 requests per minute per IP
+  } catch {
+    return { error: 'Rate limit exceeded. Please try again later.' };
   }
 
   const {
@@ -138,15 +153,36 @@ export async function submitApplication(data: z.infer<typeof ApplicationSchema>)
 
     // 3. Create Message if provided
     if (message && message.trim().length > 0) {
+      // Ensure displayPreference is valid or default to FIRST_NAME_ONLY
+      let displayPref = 'FIRST_NAME_ONLY';
+      if (displayNamePreference && ['FIRST_NAME_ONLY', 'FULL_NAME', 'ANONYMOUS'].includes(displayNamePreference)) {
+        displayPref = displayNamePreference;
+      }
+
       await prisma.message.create({
         data: {
           shareholderId: shareholder.id,
           applicationId: application.id,
           content: message,
-          displayPreference: displayNamePreference || 'FIRST_NAME_ONLY',
+          displayPreference: displayPref,
           isVisible: true, // Default to visible, admin can hide
         }
       });
+    }
+
+    // 4. Send confirmation email
+    try {
+      await sendApplicationConfirmationEmail({
+        email: shareholder.email,
+        firstName: shareholder.firstName,
+        lastName: shareholder.lastName,
+        amount,
+        reference,
+      });
+    } catch (emailError) {
+      // Log the error but don't fail the submission
+      console.error('Failed to send confirmation email:', emailError);
+      // In production, you might want to queue this for retry or notify admins
     }
 
     try {

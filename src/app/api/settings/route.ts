@@ -1,5 +1,13 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { auth } from '@/auth';
+import { z } from 'zod';
+
+const SettingsSchema = z.object({
+    minRaiseAmount: z.coerce.number().min(0),
+    targetRaiseAmount: z.coerce.number().min(0),
+    raiseEndDate: z.string().datetime(),
+});
 
 export async function GET() {
     try {
@@ -13,13 +21,25 @@ export async function GET() {
 
 export async function POST(request: Request) {
     try {
-        const body = await request.json();
-        const { minRaiseAmount, targetRaiseAmount, raiseEndDate } = body;
-
-        // Basic validation
-        if (typeof minRaiseAmount !== 'number' || typeof targetRaiseAmount !== 'number' || !raiseEndDate) {
-            return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
+        const session = await auth();
+        // Check if user is logged in. In a real app, also check role === 'admin'
+        if (!session?.user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
+
+        const body = await request.json();
+
+        // Zod Validation
+        const result = SettingsSchema.safeParse(body);
+
+        if (!result.success) {
+            return NextResponse.json({
+                error: 'Validation failed',
+                details: result.error.flatten()
+            }, { status: 400 });
+        }
+
+        const { minRaiseAmount, targetRaiseAmount, raiseEndDate } = result.data;
 
         const existing = await prisma.settings.findFirst();
 

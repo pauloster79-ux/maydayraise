@@ -5,6 +5,7 @@ import { Step1InvestorType } from '@/components/application/steps/step-1-type';
 import { Step2Details } from '@/components/application/steps/step-2-details';
 import { Step3Amount } from '@/components/application/steps/step-3-amount';
 import { Step4Risks, Step5Review } from '@/components/application/steps/step-4-5-risk-review';
+import { Step6Payment } from '@/components/application/steps/step-6-payment';
 import { useEffect, useState } from 'react';
 
 export default function InvestPage() {
@@ -32,6 +33,7 @@ export default function InvestPage() {
     case 3: return <Step3Amount />;
     case 4: return <Step4Risks />;
     case 5: return <Step5Review />;
+    case 6: return <Step6Payment />;
     default: return <Step1InvestorType />;
   }
 }
