@@ -36,18 +36,7 @@ export function Step1InvestorType() {
             </Label>
           </div>
 
-          <div>
-            <RadioGroupItem value={InvestorType.JOINT} id="joint" className="peer sr-only" />
-            <Label
-              htmlFor="joint"
-              className="flex flex-col items-start justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
-            >
-              <span className="text-lg font-semibold">Joint Application</span>
-              <span className="text-sm text-muted-foreground mt-1">
-                I am investing with another person. We will hold shares jointly.
-              </span>
-            </Label>
-          </div>
+
 
           <div>
             <RadioGroupItem value={InvestorType.ORGANIZATION} id="organization" className="peer sr-only" />

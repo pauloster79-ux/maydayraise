@@ -24,6 +24,9 @@ export function Step3Amount() {
 
   const error = useMemo(() => {
     if (parsedAmount > 0) {
+      if (!Number.isInteger(parsedAmount)) {
+        return 'Please enter a whole amount (no pence)';
+      }
       if (parsedAmount < minAmount) {
         return `Minimum investment is ${formatCurrency(minAmount)}`;
       } else if (parsedAmount > maxAmount) {

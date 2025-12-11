@@ -28,9 +28,7 @@ const PersonalInfoSchema = z.object({
   country: z.string().default('United Kingdom'),
 });
 
-const JointApplicantSchema = z.object({
-  secondaryName: z.string().optional(),
-});
+
 
 const OrganizationSchema = z.object({
   organizationName: z.string().optional(),
@@ -39,11 +37,11 @@ const OrganizationSchema = z.object({
 });
 
 const InvestmentSchema = z.object({
-  amount: z.number().min(250, 'Minimum investment is £250').max(100000, 'Maximum investment is £100,000'),
+  amount: z.number().int('Amount must be a whole number').min(250, 'Minimum investment is £250').max(100000, 'Maximum investment is £100,000'),
 });
 
 const ApplicationSchema = PersonalInfoSchema
-  .merge(JointApplicantSchema)
+
   .merge(OrganizationSchema)
   .merge(InvestmentSchema)
   .extend({
@@ -100,7 +98,7 @@ export async function submitApplication(data: z.infer<typeof ApplicationSchema>)
     investorType,
     firstName, lastName, email, phone, dateOfBirth,
     addressLine1, addressLine2, city, postcode, country,
-    secondaryName,
+
     organizationName, organizationType, companyNumber,
     amount,
     riskAcknowledgments,
@@ -127,7 +125,7 @@ export async function submitApplication(data: z.infer<typeof ApplicationSchema>)
           firstName, lastName, phone, dateOfBirth,
           addressLine1, addressLine2, city, postcode, country,
           // Clear optional fields if not relevant to new investor type
-          secondaryName: investorType === 'JOINT' ? secondaryName : null,
+
           organizationName: investorType === 'ORGANIZATION' ? organizationName : null,
           organizationType: investorType === 'ORGANIZATION' ? organizationType : null,
           companyNumber: investorType === 'ORGANIZATION' ? companyNumber : null,
@@ -140,7 +138,7 @@ export async function submitApplication(data: z.infer<typeof ApplicationSchema>)
           email,
           firstName, lastName, phone, dateOfBirth,
           addressLine1, addressLine2, city, postcode, country,
-          secondaryName: investorType === 'JOINT' ? secondaryName : undefined,
+
           organizationName: investorType === 'ORGANIZATION' ? organizationName : undefined,
           organizationType: investorType === 'ORGANIZATION' ? organizationType : undefined,
           companyNumber: investorType === 'ORGANIZATION' ? companyNumber : undefined,

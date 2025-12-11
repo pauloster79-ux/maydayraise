@@ -38,7 +38,7 @@ const schema = z.object({
   postcode: z.string().min(5, 'Postcode is required'),
 
   // Conditional fields
-  secondaryName: z.string().optional(),
+
   organizationName: z.string().optional(),
   organizationType: z.string().optional(),
   companyNumber: z.string().optional(),
@@ -63,7 +63,7 @@ export function Step2Details() {
       addressLine2: data.addressLine2,
       city: data.city,
       postcode: data.postcode,
-      secondaryName: data.secondaryName,
+
       organizationName: data.organizationName,
       organizationType: data.organizationType,
       companyNumber: data.companyNumber,
@@ -122,14 +122,7 @@ export function Step2Details() {
           </div>
         </div>
 
-        {/* Joint Applicant */}
-        {data.investorType === InvestorType.JOINT && (
-          <div className="space-y-2">
-            <Label htmlFor="secondaryName">Second Applicant Name</Label>
-            <Input id="secondaryName" {...register('secondaryName')} />
-            {errors.secondaryName && <span className="text-red-500 text-sm">{errors.secondaryName.message}</span>}
-          </div>
-        )}
+
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">

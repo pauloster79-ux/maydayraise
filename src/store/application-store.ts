@@ -10,7 +10,7 @@ export type ApplicationData = {
   phone: string;
   dateOfBirth: Date | null;
 
-  secondaryName?: string;
+
 
   organizationName?: string;
   organizationType?: string;
